@@ -1,11 +1,11 @@
 package com.mateacademy.springmvcexample.service;
 
-import com.mateacademy.springmvcexample.dto.User;
-import com.mateacademy.springmvcexample.exceptions.UserNotFoundException;
+import com.mateacademy.springmvcexample.controller.dto.User;
 import com.mateacademy.springmvcexample.model.user.UserEntity;
 import com.mateacademy.springmvcexample.repository.UserRepository;
-import com.mateacademy.springmvcexample.transform.UserTransformer;
+import com.mateacademy.springmvcexample.transform.UserMapper;
 import lombok.AllArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +14,12 @@ import java.util.List;
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserServiceImpl implements UserService {
-    private final UserTransformer transformer;
     private final UserRepository repository;
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     @Override
-    public void createUser(User user) {
-        repository.save(transformer.buildUserEntity(user));
-    }
-
-    @Override
-    public void updateUser(User user) {
-        repository.save(transformer.buildUserEntity(user));
+    public UserEntity createUser(User user) {
+        return repository.save(mapper.mapUserToUserEntity(user));
     }
 
     @Override
@@ -33,12 +28,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(Long id) {
-        return transformer.buildUser(repository.findById(id).orElseThrow(IllegalArgumentException::new));
+    public UserEntity findUserById(Long id) {
+        return repository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
-    public List<User> findAll() {
-        return transformer.buildUsers(repository.findAll());
+    public List<UserEntity> findAll() {
+        return repository.findAll();
     }
 }

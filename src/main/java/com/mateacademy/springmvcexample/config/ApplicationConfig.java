@@ -47,12 +47,17 @@ public class ApplicationConfig {
         emFactory.setDataSource((dataSource()));
         emFactory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         emFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        Properties jpaProperties = new Properties();
-        jpaProperties.setProperty("hibernate.dialect", dialect);
-        jpaProperties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
+        Properties jpaProperties = getProperties();
         emFactory.setJpaProperties(jpaProperties);
         emFactory.setPackagesToScan("com.mateacademy.springmvcexample.model");
         return emFactory;
+    }
+
+    private Properties getProperties() {
+        Properties jpaProperties = new Properties();
+        jpaProperties.setProperty("hibernate.dialect", dialect);
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
+        return jpaProperties;
     }
 
     @Bean

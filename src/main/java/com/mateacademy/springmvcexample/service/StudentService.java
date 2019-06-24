@@ -1,18 +1,18 @@
 package com.mateacademy.springmvcexample.service;
 
-import com.mateacademy.springmvcexample.dto.Student;
+import com.mateacademy.springmvcexample.model.StudentEntity;
 
 import java.util.List;
 
 public interface StudentService {
 
-    void createStudent(Student student);
+    StudentEntity createStudent(StudentEntity student);
 
-    void updateStudent(Student student);
+    void updateStudent(StudentEntity student);
 
     void deleteStudent(Long id);
 
-    Student findStudentById(Long id);
+    StudentEntity findStudentById(Long id);
 
-    List<Student> findAll();
+    List<StudentEntity> findAll();
 }
