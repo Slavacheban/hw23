@@ -18,8 +18,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     @Override
-    public UserEntity createUser(User user) {
-        return repository.save(mapper.mapUserToUserEntity(user));
+    public void createUser(User user) {
+        repository.save(mapper.mapUserToUserEntity(user));
     }
 
     @Override
@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findUserById(Long id) {
-        return repository.findById(id).orElseThrow(IllegalArgumentException::new);
+    public User findUserById(Long id) {
+        return mapper.mapUserEntityToUser(repository.findById(id).orElseThrow(IllegalArgumentException::new));
     }
 
     @Override
-    public List<UserEntity> findAll() {
-        return repository.findAll();
+    public List<User> findAll() {
+        return mapper.mapUserEntityListToUserList(repository.findAll());
     }
 }

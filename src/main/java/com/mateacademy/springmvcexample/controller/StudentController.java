@@ -8,43 +8,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
-@Controller
+@RestController
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping(path = "/students")
 public class StudentController {
     private StudentService studentService;
 
-    @GetMapping(path = "/add")
-    public String createUser(Model model) {
-        model.addAttribute("user", new Student());
-        return "edit";
+    @GetMapping("/admin/students")
+    public ModelAndView getAllProducers(){
+        ModelAndView modelAndView = new ModelAndView("ADMIN_student_list");
+        modelAndView.addObject("students", studentService.findAll());
+        return modelAndView;
     }
 
-    @PostMapping
-    public String saveStudent(StudentEntity studentEntity) {
-        studentService.createStudent(studentEntity);
-        return "redirect:/students";
+    @GetMapping("/admin/student-form")
+    public ModelAndView producerForm(){
+        Student student = new Student();
+        ModelAndView modelAndView = new ModelAndView("ADMIN_student_form");
+        modelAndView.addObject("student", student);
+        return modelAndView;
     }
 
-    @GetMapping(path = "")
-    public String getAllUsers(Model model) {
-        model.addAttribute("students", studentService.findAll());
-        return "students";
+    @PostMapping("/admin/save-student")
+    public RedirectView saveProducer(@ModelAttribute("student") Student student){
+        studentService.createStudent(student);
+        return new RedirectView("/admin/students");
     }
 
-    @GetMapping(path = "/edit/{id}")
-    public String editUser(Model model, @PathVariable(value = "id") Long id) {
-        model.addAttribute("student", studentService.findStudentById(id));
-        return "edit";
+    @GetMapping("/admin/edit-student/{id}")
+    public ModelAndView editProductForm(@PathVariable(name = "id") Long id){
+        ModelAndView modelAndView = new ModelAndView("ADMIN_edit_student");
+        Student student = studentService.findStudentById(id);
+        modelAndView.addObject("student", student);
+
+        return modelAndView;
     }
 
-    @GetMapping(path = "/delete/{id}")
-    public String deleteUser(@PathVariable(name = "id") Long id) {
+    @GetMapping("/admin/delete-student/{id}")
+    public RedirectView deleteProducer(@PathVariable(name = "id") Long id){
         studentService.deleteStudent(id);
-        return "redirect:/users";
+        return new RedirectView("/admin/students");
+    }
+
+    @GetMapping("user/students")
+    public ModelAndView getAllProducersForUser(){
+        ModelAndView modelAndView = new ModelAndView("USER_student_list");
+        modelAndView.addObject("students", studentService.findAll());
+        return modelAndView;
     }
 }
