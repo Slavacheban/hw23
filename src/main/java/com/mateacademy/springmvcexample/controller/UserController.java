@@ -21,10 +21,15 @@ public class UserController {
     private final UserService service;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @GetMapping(path = "/login")
+    public String getLogin() {
+        return "login";
+    }
+
     @GetMapping(path = "/registration-form")
     public ModelAndView registrationForm() {
         User user = new User();
-        ModelAndView modelAndView = new ModelAndView("registration-form");
+        ModelAndView modelAndView = new ModelAndView("registration_form");
         modelAndView.addObject("user", user);
         return modelAndView;
     }
